@@ -1,23 +1,43 @@
 interface IConfiguration {
-	urlQuery: string;
-	InputFieldSelector: string;
-	targetInputName: string;
-	searchKey: string;
+	
 }
 
-export default class HumanyNotificationDetector {
-	private showCph: Object = { lat: 55.6959315, lng: 12.4609883 };
+export default class Maps {
+	private copenhagen: google.maps.LatLngLiteral = {
+		lat: 55.6959315,
+		lng: 12.4609883,
+	};
 	private markerStorage: Array<any> = [];
-	private map: Object;
-	private infoWindow: Object;
+	private map: Object = google.maps.Map;
+	private infoWindow: Object = new google.maps.InfoWindow();
 	private searchKey: string = "searchkey";
 
-	constructor(config: IConfiguration) {
-		this.urlQuery = config.urlQuery;
-		this.InputFieldSelector = config.InputFieldSelector;
-		this.targetInputName = config.targetInputName;
-		this.searchKey = config.searchKey;
-		this.fetch = this.fetch.bind(this);
+	constructor(config: IConfiguration) {}
+
+	/**
+	 * Initiates the map with a custom configuration
+	 */
+	public initMap(): void {
+		this.map = new google.maps.Map(
+			document.getElementById("mapDiv") as HTMLElement,
+			{
+				center: this.copenhagen,
+				zoom: 11,
+				disableDefaultUI: true,
+				zoomControl: true,
+				clickableIcons: false,
+				styles: [
+					{
+						featureType: "poi.business",
+						stylers: [{ visibility: "off" }],
+					},
+					{
+						featureType: "transit",
+						stylers: [{ visibility: "on" }],
+					},
+				],
+			}
+		);
 	}
 
 	public getClone(id: string): Node {
@@ -30,10 +50,10 @@ export default class HumanyNotificationDetector {
 	}
 
 	private fetch() {
-    // TODO: Refactor to use fetch async
-    const _addMarker = this.addMarker;
-    const _contructLatLngObject = this.contructLatLngObject;
-    
+		// TODO: Refactor to use fetch async
+		const _addMarker = this.addMarker;
+		const _contructLatLngObject = this.contructLatLngObject;
+
 		let xmlhttp = new XMLHttpRequest();
 		xmlhttp.onreadystatechange = function () {
 			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
@@ -44,7 +64,7 @@ export default class HumanyNotificationDetector {
 						objectInList.lat,
 						objectInList.lng
 					);
-					  _addMarker(latLng, objectInList);
+					_addMarker(latLng, objectInList);
 				});
 			}
 		};
@@ -61,8 +81,8 @@ export default class HumanyNotificationDetector {
 	}
 
 	public clickMarker(marker: Object) {
-    google.maps.event.trigger(marker, "click");
-  }
+		google.maps.event.trigger(marker, "click");
+	}
 
 	private addMarker(latLng, model) {
 		if (typeof latLng !== "object") {
