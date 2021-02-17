@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist/",
+    "target": "es5",
+    "noImplicitAny": true,
+    "module": "es6",
+    "sourceMap": true,
+    "allowJs": true,
+    "declaration": true,
+    "types": ["google.maps"]
+  }
+}
