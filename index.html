@@ -32,7 +32,13 @@
 </div>
 
 <script src="dist/bundle.js"></script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBv8IP6VQfr6EEY8GGWBVnZ6NnucWSmzwA&callback=ShopLocator.maps&libraries=geometry" defer></script>
+<script>
+    const shopLocator = new ShopLocator.MapSetup({autocomplete: true});
+    function callback() {
+        shopLocator.setup();
+    }
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBv8IP6VQfr6EEY8GGWBVnZ6NnucWSmzwA&callback=callback&libraries=geometry" defer></script>
   
 </body>
 </html>

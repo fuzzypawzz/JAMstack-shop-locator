@@ -1,5 +1,5 @@
 {
-  "name": "shoplocator",
+  "name": "shop-locator",
   "version": "1.0.0",
   "description": "JAMStack shop locator application",
   "private": true,
@@ -9,7 +9,7 @@
     "start:dev": "webpack serve",
     "prod": "webpack --mode=production"
   },
-  "main": "dist/bundle.js",
+  "main": "dist/main.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/fuzzypawzz/JAMstack-shop-locator.git"
