@@ -40,7 +40,9 @@ export default class MapSetup {
 		this.initMap(); // Setup the map
 		let response: IHttpResponse<IShopData[]>;
 		try {
-			response = await http<IShopData[]>("https://myapi.api.com/");
+			response = await http<IShopData[]>(
+				"https://getstoresfunction20210216205929.azurewebsites.net/api/GetStores"
+			);
 			console.log(response);
 		} catch (response) {
 			console.log("There was an Error: ", response);
