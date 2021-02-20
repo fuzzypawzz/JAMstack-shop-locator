@@ -82,7 +82,7 @@ var ShopLocator =
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./src/js/main.js");
+/******/ 	return __webpack_require__(__webpack_require__.s = "./src/index.js");
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -540,160 +540,304 @@ module.exports = function (list, options) {
 
 /***/ }),
 
-/***/ "./src/js/main.js":
-/*!************************!*\
-  !*** ./src/js/main.js ***!
-  \************************/
-/*! exports provided: maps */
+/***/ "./src/index.js":
+/*!**********************!*\
+  !*** ./src/index.js ***!
+  \**********************/
+/*! exports provided: MapSetup */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _maps__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./maps */ "./src/js/maps.js");
-/* harmony import */ var _maps__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_maps__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony reexport (default from non-harmony) */ __webpack_require__.d(__webpack_exports__, "maps", function() { return _maps__WEBPACK_IMPORTED_MODULE_0___default.a; });
-/* harmony import */ var _styles_main_scss__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../styles/main.scss */ "./src/styles/main.scss");
- //import autocomplete from "./autocomplete";
+/* harmony import */ var _js_MapSetup__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./js/MapSetup */ "./src/js/MapSetup.ts");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "MapSetup", function() { return _js_MapSetup__WEBPACK_IMPORTED_MODULE_0__["default"]; });
+
+/* harmony import */ var _styles_main_scss__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ././styles/main.scss */ "./src/styles/main.scss");
+ //import app from "./app";
+//import autocomplete from "./autocomplete";
 
 
+
+/**
+ * 
+ * Start:
+ * 
+ * const shopLocator = new ShopLocator(config);
+ * callback calls shopLocator.setup();
+ * 
+ * 
+ * 
+ */
+
+/***/ }),
+
+/***/ "./src/js/MapSetup.ts":
+/*!****************************!*\
+  !*** ./src/js/MapSetup.ts ***!
+  \****************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _helpers_getClone__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./helpers/getClone */ "./src/js/helpers/getClone.ts");
+/* harmony import */ var _helpers_http__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./helpers/http */ "./src/js/helpers/http.ts");
+// DOCS: https://developers.google.com/maps/documentation/javascript/using-typescript
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __generator = (undefined && undefined.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
+
+
+var MapSetup = /** @class */ (function () {
+    function MapSetup(config) {
+        this.copenhagen = {
+            lat: 55.6959315,
+            lng: 12.4609883,
+        };
+        this.markerStorage = [];
+        this.wrapperForMapId = "mapDiv";
+        this.activateAutocomplete = false;
+        this.activateAutocomplete = config.autocomplete;
+    }
+    MapSetup.prototype.setup = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var response, response_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        this.infoWindow = new google.maps.InfoWindow();
+                        this.initMap(); // Setup the map
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 4]);
+                        return [4 /*yield*/, Object(_helpers_http__WEBPACK_IMPORTED_MODULE_1__["default"])("https://getstoresfunction20210216205929.azurewebsites.net/api/GetStores")];
+                    case 2:
+                        response = _a.sent();
+                        console.log(response);
+                        this.handleShopDataList(response.parsedBody);
+                        return [3 /*break*/, 4];
+                    case 3:
+                        response_1 = _a.sent();
+                        console.log("There was an Error: ", response_1);
+                        return [3 /*break*/, 4];
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    /**
+     * Initiates the map with a custom configuration
+     */
+    MapSetup.prototype.initMap = function () {
+        var centerLatLng = this.copenhagen;
+        var wrapperId = this.wrapperForMapId;
+        this.map = new google.maps.Map(document.getElementById(wrapperId), {
+            center: centerLatLng,
+            zoom: 11,
+            disableDefaultUI: true,
+            zoomControl: true,
+            clickableIcons: false,
+            styles: [
+                {
+                    featureType: "poi.business",
+                    stylers: [{ visibility: "off" }],
+                },
+                {
+                    featureType: "transit",
+                    stylers: [{ visibility: "on" }],
+                },
+            ],
+        });
+    };
+    MapSetup.prototype.contructLatLngObject = function (lat, lng) {
+        var latLng = {
+            lat: parseFloat(lat),
+            lng: parseFloat(lng),
+        };
+        return latLng;
+    };
+    MapSetup.prototype.clickMarker = function (marker) {
+        google.maps.event.trigger(marker, "click");
+    };
+    // TOOD: Need to find out if all the shop data should be on the marker itself
+    MapSetup.prototype.handleShopDataList = function (shopDataList) {
+        var _this = this;
+        shopDataList.forEach(function (shop) {
+            var latLngObject = _this.contructLatLngObject(shop.lat, shop.lng);
+            _this.contructMarker(latLngObject, shop.id);
+        });
+    };
+    MapSetup.prototype.contructMarker = function (latLng, markerId) {
+        var marker = new google.maps.Marker({
+            position: latLng,
+            map: this.map,
+        });
+        function addClickHandler(marker) {
+            marker.addListener("click", function () {
+                var listItemRadio = document
+                    .querySelector("#" + this.id)
+                    .querySelector("input");
+                listItemRadio.checked = true;
+                var infoWindowContent = Object(_helpers_getClone__WEBPACK_IMPORTED_MODULE_0__["default"])("popup_" + markerId);
+                this.infoWindow.setContent(infoWindowContent);
+                this.infoWindow.setPosition(latLng);
+                this.infoWindow.setOptions({
+                    // Display infowindow correctly relatively to the marker position
+                    pixelOffset: new google.maps.Size(0, -30),
+                });
+                this.map.setZoom(15);
+                this.infoWindow.open(this.map);
+                this.map.setCenter(latLng);
+            });
+        }
+        addClickHandler(marker);
+        this.saveMarker(marker);
+        return marker;
+    };
+    MapSetup.prototype.saveMarker = function (marker) {
+        this.markerStorage.push(marker);
+    };
+    return MapSetup;
+}());
+/* harmony default export */ __webpack_exports__["default"] = (MapSetup);
 
 
 /***/ }),
 
-/***/ "./src/js/maps.js":
-/*!************************!*\
-  !*** ./src/js/maps.js ***!
-  \************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
+/***/ "./src/js/helpers/getClone.ts":
+/*!************************************!*\
+  !*** ./src/js/helpers/getClone.ts ***!
+  \************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-// TODO: Setup webpack and introduce Vue
-
-/**
- * Author: Jannik Maag (Github: Fuzzypawzz)
- * License: MIT
- */
-function shopLocator() {
-  var showCph = {
-    lat: 55.6959315,
-    lng: 12.4609883
-  };
-  var markerStorage = [];
-  var map = new google.maps.Map(document.getElementById("mapDiv"), {
-    center: showCph,
-    clickable: true,
-    zoom: 11,
-    disableDefaultUI: true,
-    zoomControl: true,
-    clickableIcons: false,
-    // Dont display business and transport Point Of Interest
-    styles: [{
-      featureType: "poi.business",
-      stylers: [{
-        visibility: "off"
-      }]
-    }, {
-      featureType: "transit",
-      stylers: [{
-        visibility: "on"
-      }]
-    }]
-  });
-  var infoWindow = new google.maps.InfoWindow();
-  /**
-   *
-   * @param {object} latLng - object containing Lat and Lng
-   */
-
-  function addMarker(latLng, model) {
-    if (_typeof(latLng) !== "object") {
-      throw new Error("Marker coordinates must be an object!");
-    }
-
-    var marker = new google.maps.Marker({
-      position: latLng,
-      map: map,
-      id: "marker_".concat(model.id)
-    }); // TODO: Refractor, make controller return the id format like: "marker_ID"
-    // When done, just call querySelector with this.id and remove the prefix from the view: stores/index.cshtml
-
-    marker.addListener("click", function () {
-      var listItemRadio = document.querySelector("#".concat(this.id)).querySelector("input");
-      listItemRadio.checked = true;
-      var infoWindowContent = getClone("popup_".concat(model.id));
-      infoWindow.setContent(infoWindowContent);
-      infoWindow.setPosition(latLng);
-      infoWindow.setOptions({
-        // Display infowindow correctly relatively to the marker position
-        pixelOffset: new google.maps.Size(0, -30)
-      });
-      map.setZoom(15);
-      infoWindow.open(map);
-      map.setCenter(latLng);
-    });
-    markerStorage.push(marker);
-  }
-
-  function clickMarker(marker) {
-    google.maps.event.trigger(marker, "click");
-  }
-  /**
-   * TODO: Refractor when setting up Vue templates
-   * @param {string} id - Element ID to clone a new element from
-   */
-
-
-  function getClone(id) {
-    var node = document.querySelector("#".concat(id));
-
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return getClone; });
+function getClone(id) {
+    var node = document.querySelector("#" + id);
     if (!node) {
-      throw new Error("Template to clone could not be found");
+        throw new Error("Clone base element could not be found");
     }
-
-    return node.cloneNode([true]);
-  }
-
-  function contructLatLngObject(lat, lng) {
-    return {
-      lat: parseFloat(lat),
-      lng: parseFloat(lng)
-    };
-  } // TODO: Get element id from constant
-
-
-  document.querySelector("#listofstores").querySelectorAll("li").forEach(function (listItem) {
-    listItem.addEventListener("click", function () {
-      var _this = this;
-
-      markerStorage.forEach(function (marker) {
-        if (marker.id == _this.id) {
-          clickMarker(marker);
-        }
-      });
-    });
-  });
-  google.maps.event.addListener(infoWindow, "closeclick", function () {
-    map.setZoom(11);
-  });
-  var xmlhttp = new XMLHttpRequest();
-
-  xmlhttp.onreadystatechange = function () {
-    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-      // How do i make sure that this is always a list? For safety.
-      var list = JSON.parse(xmlhttp.responseText);
-      list.forEach(function (objectInList) {
-        var latLng = contructLatLngObject(objectInList.lat, objectInList.lng);
-        addMarker(latLng, objectInList);
-      });
-    }
-  }; // TODO: Get controller endpoint from a constant
-
-
-  xmlhttp.open("GET", "/Stores/GetCoordinates", true);
-  xmlhttp.send();
+    // Changed this to be true instead of [true]
+    return node.cloneNode(true);
 }
+
+
+/***/ }),
+
+/***/ "./src/js/helpers/http.ts":
+/*!********************************!*\
+  !*** ./src/js/helpers/http.ts ***!
+  \********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return http; });
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __generator = (undefined && undefined.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
+function http(url) {
+    return __awaiter(this, void 0, void 0, function () {
+        var response, _a, _b, e_1;
+        return __generator(this, function (_c) {
+            switch (_c.label) {
+                case 0: return [4 /*yield*/, fetch(url)];
+                case 1:
+                    response = _c.sent();
+                    _a = response;
+                    return [4 /*yield*/, response.json()];
+                case 2:
+                    _a.parsedBody = _c.sent();
+                    _c.label = 3;
+                case 3:
+                    _c.trys.push([3, 5, , 6]);
+                    _b = response;
+                    return [4 /*yield*/, response.json()];
+                case 4:
+                    _b.parsedBody = _c.sent();
+                    return [3 /*break*/, 6];
+                case 5:
+                    e_1 = _c.sent();
+                    return [3 /*break*/, 6];
+                case 6:
+                    if (!response.ok) {
+                        throw new Error(response.statusText);
+                    }
+                    return [2 /*return*/, response];
+            }
+        });
+    });
+}
+
 
 /***/ }),
 

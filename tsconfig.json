@@ -7,7 +7,7 @@
     "sourceMap": true,
     "allowJs": true,
     "declaration": true,
-    "types": ["google.maps"],
+    "types": ["google.maps", "node"],
     "lib": ["ES2015", "DOM"]
   }
 }

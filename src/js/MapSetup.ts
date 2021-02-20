@@ -36,6 +36,7 @@ export default class MapSetup {
 	}
 
 	public async setup(): Promise<void> {
+
 		this.infoWindow = new google.maps.InfoWindow();
 		this.initMap(); // Setup the map
 		let response: IHttpResponse<IShopData[]>;
@@ -44,6 +45,7 @@ export default class MapSetup {
 				"https://getstoresfunction20210216205929.azurewebsites.net/api/GetStores"
 			);
 			console.log(response);
+			this.handleShopDataList(response.parsedBody)
 		} catch (response) {
 			console.log("There was an Error: ", response);
 		}

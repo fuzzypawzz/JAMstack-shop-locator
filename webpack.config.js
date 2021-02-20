@@ -42,6 +42,9 @@ module.exports = {
 		],
 	},
 	resolve: {
+		alias: {
+			handlebars: "../../node_modules/handlebars/dist/handlebars.js"
+		},
 		extensions: ["*", ".js", ".tsx", ".ts"],
 		modules: [path.resolve(__dirname, "src")]
 	},
