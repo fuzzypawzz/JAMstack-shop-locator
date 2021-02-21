@@ -260,10 +260,10 @@ module.exports = function cssWithMappingToString(item) {
 
 /***/ }),
 
-/***/ "./node_modules/file-loader/dist/cjs.js?name=[name].[ext]!./index.html":
-/*!*****************************************************************************!*\
-  !*** ./node_modules/file-loader/dist/cjs.js?name=[name].[ext]!./index.html ***!
-  \*****************************************************************************/
+/***/ "./node_modules/file-loader/dist/cjs.js?name=[name].[ext]!./src/index.html":
+/*!*********************************************************************************!*\
+  !*** ./node_modules/file-loader/dist/cjs.js?name=[name].[ext]!./src/index.html ***!
+  \*********************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -566,7 +566,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "MapSetup", function() { return _js_MapSetup__WEBPACK_IMPORTED_MODULE_0__["default"]; });
 
 /* harmony import */ var _styles_main_scss__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ././styles/main.scss */ "./src/styles/main.scss");
-__webpack_require__(/*! file-loader?name=[name].[ext]!../index.html */ "./node_modules/file-loader/dist/cjs.js?name=[name].[ext]!./index.html");
+__webpack_require__(/*! file-loader?name=[name].[ext]!index.html */ "./node_modules/file-loader/dist/cjs.js?name=[name].[ext]!./src/index.html");
 
  //import app from "./app";
 //import autocomplete from "./autocomplete";
