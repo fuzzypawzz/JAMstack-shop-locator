@@ -3,6 +3,7 @@
 import getClone from "./helpers/getClone";
 import http from "./helpers/http";
 import { IHttpResponse } from "./helpers/http";
+import { template as listItemTemplate } from "../templates/_list-item";
 
 interface IConfiguration {
 	autocomplete?: boolean;
@@ -39,12 +40,83 @@ export default class MapSetup {
 		this.infoWindow = new google.maps.InfoWindow();
 		this.initMap(); // Setup the map
 		let response: IHttpResponse<IShopData[]>;
+		let responseMock: any;
 		try {
-			response = await http<IShopData[]>(
-				"https://getstoresfunction20210216205929.azurewebsites.net/api/GetStores"
-			);
+			// response = await http<IShopData[]>(
+			// 	"https://getstoresfunction20210216205929.azurewebsites.net/api/GetStores"
+			// );
+			responseMock = [
+				{
+					name: "Cphbusiness ved Søerne",
+					street: "Nansensgade",
+					houseNumber: 19,
+					zipCode: 1366,
+					city: "København",
+					phoneNumber: 36154501,
+					lat: "55.68204709239865",
+					lng: "12.562809042571491",
+					id: "34324",
+				},
+				{
+					name: "Cphbusiness Nørrebro",
+					street: "Blågårdsgade",
+					houseNumber: 23,
+					zipCode: 2200,
+					city: "København N",
+					phoneNumber: 36154501,
+					lat: "55.687036666310156",
+					lng: "12.559322146721001",
+					id: "34224",
+				},
+				{
+					name: "Cphbusiness Lyngby",
+					street: "Nørgaardsvej",
+					houseNumber: 30,
+					zipCode: 2800,
+					city: "Kongens Lyngby",
+					phoneNumber: 36154501,
+					lat: "55.770911361721794",
+					lng: "12.511768553967515",
+					id: "732842",
+				},
+				{
+					name: "MinTestButik",
+					street: "demostreet",
+					houseNumber: 99,
+					zipCode: 0,
+					city: "København",
+					phoneNumber: 99999999,
+					lat: "59.22321412",
+					lng: "12.24342324",
+					id: "3248222",
+				},
+				{
+					name: "Telia Holmbladsgade",
+					street: "Holmbladsgade",
+					houseNumber: 139,
+					zipCode: 2300,
+					city: "København S",
+					phoneNumber: 99999999,
+					lat: "59.22321412",
+					lng: "12.24342324",
+					id: "3849232",
+				},
+				{
+					name: "Telia Frederiksberg",
+					street: "frederiksberggade",
+					houseNumber: 139,
+					zipCode: 2300,
+					city: "Frederiksberg",
+					phoneNumber: 99999999,
+					lat: "59.22321412",
+					lng: "12.24342324",
+					id: "2421",
+				},
+			];
 			console.log(response);
-			this.handleShopDataList(response.parsedBody)
+			//this.handleShopDataList(response.parsedBody)
+			this.handleShopDataList(responseMock);
+			this.createShopItemList(responseMock);
 		} catch (response) {
 			console.log("There was an Error: ", response);
 		}
@@ -103,6 +175,28 @@ export default class MapSetup {
 			);
 			this.contructMarker(latLngObject, shop.id);
 		});
+	}
+
+	private createShopItemList(shopDataList: IShopData[]): void {
+		let listTemplate: string = listItemTemplate({
+			entries: shopDataList,
+		});
+		this.updateDOM(
+			listItemTemplate({
+				entries: shopDataList,
+			}),
+			"listofstores"
+		);
+	}
+
+	private updateDOM(html: string, targetId: string): void {
+		// TODO: Refactor this
+		const target: any = document.querySelector(`#${targetId}`);
+		const element: Element = document.createElement("div");
+		element.innerHTML = html;
+		target
+			? target.appendChild(element)
+			: console.error(`Something went wrong when trying to update the DOM. Is the target id "${targetId}" correct?`);
 	}
 
 	private contructMarker(
