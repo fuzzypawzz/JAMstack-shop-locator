@@ -1,41 +1,158 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Shop Locator JAMStack application</title>
-</head>
-<body>
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+		/>
+		<link
+			href="https://fonts.googleapis.com/icon?family=Material+Icons"
+			rel="stylesheet"
+		/>
+		<title>Shop Locator JAMStack application</title>
+	</head>
 
-<div class="shop-locator-wrapper">
-    <div class="shop-locator-container--left" id="search-header">
+	<body>
+		<header>
+			<nav class="indigo darken-1">
+				<div class="nav-wrapper container">
+					<a class="brand-logo left" href="/"> JAMStack Shop Locator </a>
+					<ul id="nav-mobile" class="right hide-on-med-and-down">
+						<li>
+							<a
+								class="navbar-item"
+								href="https://github.com/fuzzypawzz/jamstack-shop-locator"
+								target="_blank"
+							>
+								View on GitHub
+							</a>
+						</li>
+					</ul>
+					<a href="#" data-target="nav-mobile" class="right sidenav-trigger"
+						><i class="material-icons">menu</i></a
+					>
+				</div>
+			</nav>
+		</header>
 
-        <section class="shop-locator-search padding--small">
-            <h4 class="search-headline">Søg efter butik</h4>
+		<section class="section">
+			<div class="container">
+				<div class="shop-locator-wrapper">
+					<div class="shop-locator-container--left" id="search-header">
+						<section class="shop-locator-search padding--small">
+							<h4 class="search-headline">Søg efter butik</h4>
 
-            <!-- Search field -->
-            <div class="input-field col s6">
-                <input id="autoComplete" placeholder="Søg.." type="text" class="validate">
-            </div>
-        </section>
+							<!-- Search field -->
+							<div class="input-field col s6">
+								<input
+									id="autoComplete"
+									placeholder="Søg.."
+									type="text"
+									class="validate"
+								/>
+							</div>
+						</section>
 
-        <section class="shop-locator-list" id="listofstores">
-        </section>
+						<section class="shop-locator-list" id="listofstores"></section>
+					</div>
+					<div class="shop-locator-container--right" id="mapDiv"></div>
+				</div>
+			</div>
+		</section>
 
-    </div>
-    <div class="shop-locator-container--right" id="mapDiv">
-    </div>
-</div>
+		<footer class="page-footer pink darken-2">
+			<div class="container">
+				<div class="row">
+					<div class="col l6 s12">
+						<h5 class="white-text">About</h5>
+						<p class="grey-text text-lighten-4">
+							The Shop Locator is static web application made with the JAMStack
+							architecture in mind. The only 'back-end' this app has, is an
+							Azure Function serving as it's primary web API.
+							<br /><br />The JAMStack Shop Locator is created by Jannik Maag,
+							as part of a school project in Cloud Hosting Technologies at CPH
+							Business. - Copenhagen 2021.<br />
+							<strong>License: MIT.</strong>
+						</p>
+					</div>
+					<div class="col l3 s12">
+						<h5 class="white-text">Made using</h5>
+						<ul>
+							<li>TypeScript</li>
+							<li>HTML</li>
+							<li>
+								<a
+									class="white-text"
+									target="_blank"
+									href="https://sass-lang.com/"
+									>Sass SCSS</a
+								>
+							</li>
+							<li>
+								<a
+									class="white-text"
+									target="_blank"
+									href="https://azure.microsoft.com/"
+									>Microsoft Azure Functions</a
+								>
+							</li>
+							<li>
+								<a
+									class="white-text"
+									target="_blank"
+									href="https://developers.google.com/maps/documentation/javascript/overview"
+									>Google Maps JS API</a
+								>
+							</li>
+						</ul>
+					</div>
+					<div class="col l3 s12">
+						<h5 class="white-text">Feedback</h5>
+						<ul>
+							<li>
+								<a
+									class="white-text"
+									target="_blank"
+									href="https://github.com/fuzzypawzz/jamstack-shop-locator"
+									>Shop Locator on GitHub</a
+								>
+							</li>
+							<li>
+								<a
+									class="white-text"
+									target="_blank"
+									href="https://dk.linkedin.com/in/jannik-maag"
+									>Jannik Maag on LinkedIn</a
+								>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="footer-copyright">
+				<div class="container">
+					Kudos to the awesome CSS framework:
+					<a class="orange-text text-lighten-3" href="http://materializecss.com"
+						>Materialize</a
+					>
+				</div>
+			</div>
+		</footer>
 
-<script src="bundle.js"></script>
-<script>
-    const shopLocator = new ShopLocator.MapSetup({autocomplete: true});
-    function callback() {
-        shopLocator.setup();
-    }
-</script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBv8IP6VQfr6EEY8GGWBVnZ6NnucWSmzwA&callback=callback&libraries=geometry" defer></script>
-  
-</body>
+		<script src="bundle.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+		<script>
+			const shopLocator = new ShopLocator.MapSetup({ autocomplete: true });
+			function callback() {
+				shopLocator.setup();
+			}
+		</script>
+		<script
+			src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBv8IP6VQfr6EEY8GGWBVnZ6NnucWSmzwA&callback=callback&libraries=geometry"
+			defer
+		></script>
+	</body>
 </html>
