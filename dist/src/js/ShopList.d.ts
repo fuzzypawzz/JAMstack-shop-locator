@@ -1,0 +1,13 @@
+interface IShopDetails {
+    name: string;
+    street: string;
+    houseNumber?: string;
+    city: string;
+    zipcode: number;
+    phoneNumber?: number;
+    id?: string;
+}
+declare class ShopList {
+    shopDetails: IShopDetails[];
+    constructor(shopDetails: IShopDetails[]);
+}

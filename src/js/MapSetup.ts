@@ -36,7 +36,6 @@ export default class MapSetup {
 	}
 
 	public async setup(): Promise<void> {
-
 		this.infoWindow = new google.maps.InfoWindow();
 		this.initMap(); // Setup the map
 		let response: IHttpResponse<IShopData[]>;
