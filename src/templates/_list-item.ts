@@ -3,10 +3,10 @@ const Handlebars = require("handlebars");
 export const template = Handlebars.compile(`
 <ul>
 {{#each entries}}
-  <li id="{{ id }}">
+  <li>
     <section class="shop-locator-list-item padding--small">
-      <input type="radio" name="toggle" id="input_{{ id }}" />
-      <label for="input_{{ id }}">
+      <input type="radio" name="toggle" id="marker_{{ id }}" />
+      <label for="marker_{{ id }}">
         <h6 class="headline">{{ name }}</h6>
         <p class="shop-locator-list-item__address-info">
           <span>

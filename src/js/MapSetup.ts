@@ -4,6 +4,7 @@ import getClone from "./helpers/getClone";
 import http from "./helpers/http";
 import { IHttpResponse } from "./helpers/http";
 import { template as listItemTemplate } from "../templates/_list-item";
+import { template as infoWindowTemplate } from "../templates/_info-window";
 
 interface IConfiguration {
 	autocomplete?: boolean;
@@ -21,12 +22,17 @@ interface IShopData {
 	lng: number;
 }
 
+interface IExtendedMarker extends google.maps.Marker {
+	id?: number | string;
+	markup?: string;
+}
+
 export default class MapSetup {
 	private copenhagen: google.maps.LatLngLiteral = {
 		lat: 55.6959315,
 		lng: 12.4609883,
 	};
-	private markerStorage: Array<any> = [];
+	private markerStorage: Array<google.maps.Marker> = [];
 	private map: google.maps.Map;
 	private infoWindow: google.maps.InfoWindow;
 	private wrapperForMapId: string = "mapDiv";
@@ -162,10 +168,6 @@ export default class MapSetup {
 		return latLng;
 	}
 
-	public clickMarker(marker: google.maps.Marker) {
-		google.maps.event.trigger(marker, "click");
-	}
-
 	// TOOD: Need to find out if all the shop data should be on the marker itself
 	private handleShopDataList(shopDataList: IShopData[]): void {
 		shopDataList.forEach((shop: IShopData) => {
@@ -173,58 +175,91 @@ export default class MapSetup {
 				shop.lat,
 				shop.lng
 			);
-			this.contructMarker(latLngObject, shop.id);
+			this.contructMarker(latLngObject, shop);
 		});
 	}
 
 	private createShopItemList(shopDataList: IShopData[]): void {
-		let listTemplate: string = listItemTemplate({
-			entries: shopDataList,
-		});
-		this.updateDOM(
+		const ul: Element = this.templateToElement(
 			listItemTemplate({
 				entries: shopDataList,
-			}),
-			"listofstores"
+			})
 		);
+
+		const listItems = ul.querySelectorAll("input");
+
+		// BOUND TO MARKER
+		function triggerMarkerClick(): void {
+			google.maps.event.trigger(this, "click");
+		}
+
+		// TODO: The event bubbling should be disabled, so only 1 event fires on click
+		listItems.forEach((item) => {
+			item.addEventListener(
+				"click",
+				triggerMarkerClick.bind(
+					this.markerStorage.find(
+						(marker: IExtendedMarker) => marker.id == item.id
+					)
+				)
+			);
+		})
+
+		this.updateDOM(ul, "listofstores");
 	}
 
-	private updateDOM(html: string, targetId: string): void {
-		// TODO: Refactor this
+	private templateToElement(
+		htmlTemplate: string,
+		parentElementTag?: string
+	): Element {
+		const parentElement: Element = document.createElement(
+			parentElementTag ? parentElementTag : "div"
+		);
+		parentElement.innerHTML = htmlTemplate;
+		return parentElement;
+	}
+
+	private updateDOM(html: string | Element, targetId: string): void {
 		const target: any = document.querySelector(`#${targetId}`);
-		const element: Element = document.createElement("div");
-		element.innerHTML = html;
-		target
-			? target.appendChild(element)
-			: console.error(`Something went wrong when trying to update the DOM. Is the target id "${targetId}" correct?`);
+		const element: Element =
+			typeof html == "string" ? this.templateToElement(html) : html;
+
+		try {
+			target.appendChild(element);
+		} catch (error) {
+			console.warn(
+				`Something went wrong when trying to update the DOM. Is target-id: "${targetId}" correct?`
+			);
+			throw new Error(error);
+		}
 	}
 
 	private contructMarker(
 		latLng: google.maps.LatLngLiteral,
-		markerId: string
+		shopData: IShopData
 	): google.maps.Marker {
+		const infoWindow = this.infoWindow;
+
 		const marker = new google.maps.Marker({
 			position: latLng,
 			map: this.map,
-			//id: `marker_${markerId}`,
+			id: `marker_${shopData.id}`,
+			markup: infoWindowTemplate(shopData),
 		});
 
 		function addClickHandler(marker: google.maps.Marker) {
 			marker.addListener("click", function () {
-				const listItemRadio = document
-					.querySelector(`#${this.id}`)
-					.querySelector("input");
+				const listItemRadio: any = document.querySelector(`#${this.id}`);
 				listItemRadio.checked = true;
 
-				const infoWindowContent = getClone(`popup_${markerId}`);
-				this.infoWindow.setContent(infoWindowContent);
-				this.infoWindow.setPosition(latLng);
-				this.infoWindow.setOptions({
+				infoWindow.setContent(this.markup);
+				infoWindow.setPosition(latLng);
+				infoWindow.setOptions({
 					// Display infowindow correctly relatively to the marker position
-					pixelOffset: new google.maps.Size(0, -30),
+					pixelOffset: new google.maps.Size(0, -35),
 				});
 				this.map.setZoom(15);
-				this.infoWindow.open(this.map);
+				infoWindow.open(this.map);
 				this.map.setCenter(latLng);
 			});
 		}
