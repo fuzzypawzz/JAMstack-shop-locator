@@ -122,7 +122,7 @@ export default class MapSetup {
 			console.log(response);
 			//this.handleShopDataList(response.parsedBody)
 			this.handleShopDataList(responseMock);
-			this.createShopItemList(responseMock);
+			this.generateShopListItems(responseMock);
 		} catch (response) {
 			console.log("There was an Error: ", response);
 		}
@@ -179,16 +179,14 @@ export default class MapSetup {
 		});
 	}
 
-	private createShopItemList(shopDataList: IShopData[]): void {
+	private generateShopListItems(shopDataList: IShopData[]): void {
 		const ul: Element = this.templateToElement(
 			listItemTemplate({
 				entries: shopDataList,
 			})
 		);
-
 		const listItems = ul.querySelectorAll("input");
 
-		// BOUND TO MARKER
 		function triggerMarkerClick(): void {
 			google.maps.event.trigger(this, "click");
 		}
@@ -203,7 +201,7 @@ export default class MapSetup {
 					)
 				)
 			);
-		})
+		});
 
 		this.updateDOM(ul, "listofstores");
 	}
@@ -247,11 +245,16 @@ export default class MapSetup {
 			markup: infoWindowTemplate(shopData),
 		});
 
-		function addClickHandler(marker: google.maps.Marker) {
-			marker.addListener("click", function () {
-				const listItemRadio: any = document.querySelector(`#${this.id}`);
-				listItemRadio.checked = true;
+		function addClickHandler(marker: IExtendedMarker) {
+			function listItemHandler() {
+				this.element.checked = true;
+			}
 
+			marker.addListener("click", function () {
+				if (!this.listElementRadioBinding) {
+					this.listElementRadioBinding = document.querySelector(`#${this.id}`);
+				}
+				this.listElementRadioBinding.checked = true;
 				infoWindow.setContent(this.markup);
 				infoWindow.setPosition(latLng);
 				infoWindow.setOptions({
