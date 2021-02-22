@@ -168,6 +168,13 @@ export default class MapSetup {
 		return latLng;
 	}
 
+	// private setLoadScreen(toggle: boolean) {
+	// 	const overlay = document.createElement("div");
+	// 	overlay.className = "load_overlay";
+	// 	const wrapper: Element = document.querySelector("shop-locator-wrapper");
+	// 	wrapper.append(overlay);
+	// }
+
 	// TOOD: Need to find out if all the shop data should be on the marker itself
 	private handleShopDataList(shopDataList: IShopData[]): void {
 		shopDataList.forEach((shop: IShopData) => {
@@ -238,7 +245,7 @@ export default class MapSetup {
 	): google.maps.Marker {
 		const infoWindow = this.infoWindow;
 
-		const marker = new google.maps.Marker({
+		const marker: IExtendedMarker = new google.maps.Marker({
 			position: latLng,
 			map: this.map,
 			id: `marker_${shopData.id}`,
