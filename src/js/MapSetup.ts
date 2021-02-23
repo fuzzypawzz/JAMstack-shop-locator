@@ -1,31 +1,18 @@
 // DOCS: https://developers.google.com/maps/documentation/javascript/using-typescript
 
+// Helpers
 import getClone from "./helpers/getClone";
 import http from "./helpers/http";
-import { IHttpResponse } from "./helpers/http";
+
+// Template generators
 import { template as listItemTemplate } from "../templates/_list-item";
 import { template as infoWindowTemplate } from "../templates/_info-window";
 
-interface IConfiguration {
-	autocomplete?: boolean;
-}
-
-interface IShopData {
-	name: string;
-	street: string;
-	houseNumber?: string;
-	city: string;
-	zipcode: number;
-	phoneNumber?: number;
-	id?: string;
-	lat: number;
-	lng: number;
-}
-
-interface IExtendedMarker extends google.maps.Marker {
-	id?: number | string;
-	markup?: string;
-}
+// Interfaces
+import { IHttpResponse } from "./helpers/http";
+import IConfiguration from "./Interfaces/IConfiguration";
+import IShopData from "./Interfaces/IShopData";
+import IExtendedMarker from "./Interfaces/IExtendedMarker";
 
 export default class MapSetup {
 	private copenhagen: google.maps.LatLngLiteral = {
@@ -37,6 +24,7 @@ export default class MapSetup {
 	private infoWindow: google.maps.InfoWindow;
 	private wrapperForMapId: string = "mapDiv";
 	private activateAutocomplete: boolean = false;
+	public shopDataFromResponse: IHttpResponse<IShopData[]>;
 
 	constructor(config: IConfiguration) {
 		this.activateAutocomplete = config.autocomplete;
@@ -44,7 +32,7 @@ export default class MapSetup {
 
 	public async setup(): Promise<void> {
 		this.infoWindow = new google.maps.InfoWindow();
-		this.initMap(); // Setup the map
+		this.initMap();
 		let response: IHttpResponse<IShopData[]>;
 		let responseMock: any;
 		try {
@@ -120,6 +108,7 @@ export default class MapSetup {
 				},
 			];
 			console.log(response);
+			this.shopDataFromResponse = responseMock;
 			//this.handleShopDataList(response.parsedBody)
 			this.handleShopDataList(responseMock);
 			this.generateShopListItems(responseMock);
