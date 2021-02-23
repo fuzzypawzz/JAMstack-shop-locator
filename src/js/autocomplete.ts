@@ -15,13 +15,6 @@ export default function autoCompleteSetup() {
 				} else if (shopLocator.mockData) {
 					return shopLocator.mockData;
 				} else {
-					// // Fetch External Data Source
-					// const source = await fetch(
-					// 	`https://getstoresfunction20210216205929.azurewebsites.net/api/GetStores`
-					// );
-					// // Format data into JSON
-					// const data = await source.json();
-					// // Return Fetched data
 					return [];
 				}
 			},
