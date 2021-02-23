@@ -4,7 +4,10 @@ const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 module.exports = {
 	mode: "development",
 	devtool: "source-map",
-	entry: path.resolve(__dirname, "./src/index.js"),
+	entry: [
+		"../../node_modules/regenerator-runtime/runtime.js",
+		path.resolve(__dirname, "./src/index.js"),
+	],
 	output: {
 		path: path.resolve(__dirname, "dist"),
 		filename: "bundle.js",
