@@ -159,15 +159,10 @@
 				APIEndpoint: prompt(
 					"Please enter your API endpoint URL. Leave the field blank or click CANCEL to continue using some mock-data"
 				),
+				MAPS_API_KEY: "AIzaSyBv8IP6VQfr6EEY8GGWBVnZ6NnucWSmzwA"
 			});
-			function callback() {
-				shopLocator.setup();
-			}
+			shopLocator.loadMaps();
 		</script>
-		<script
-			src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBv8IP6VQfr6EEY8GGWBVnZ6NnucWSmzwA&callback=callback&libraries=geometry"
-			defer
-		></script>
 		<!-- TODO: Add as dependency in package.json -->
 		<script src="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@8.2.2/dist/js/autoComplete.js"></script>
 	</body>

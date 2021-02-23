@@ -21,10 +21,8 @@ export const template = Handlebars.compile(`
       </label>
       <section class="shop-locator-list-item__more-content">
         <p class="shop-locator-list-item__address-info">
-          This section can hold more data like the phonenumber, opening hours, etc.
-          <span>
-            {{ phoneNumber }}
-          </span>
+          <span>Telefon: {{ phoneNumber }}</span>
+          <span>Åbningstider: Kommer snart</span>
         </p>
       </section>
     </section>

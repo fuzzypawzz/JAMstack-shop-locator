@@ -1,7 +1,6 @@
 // DOCS: https://developers.google.com/maps/documentation/javascript/using-typescript
 
 // Helpers
-import getClone from "./helpers/getClone";
 import http from "./helpers/http";
 
 // Template generators
@@ -29,15 +28,31 @@ export default class MapSetup {
 	private wrapperForMapId: string = "mapDiv";
 	private activateAutocomplete: boolean = false;
 	private APIEndpoint: string;
+	private MAPS_API_KEY: string;
 	public shopDataFromResponse: IHttpResponse<IShopData[]>;
 	public mockData: IShopData[];
 
 	constructor(config: IConfiguration) {
 		this.activateAutocomplete = config.autocomplete;
 		this.APIEndpoint = config.APIEndpoint;
+		this.MAPS_API_KEY = config.MAPS_API_KEY;
 	}
 
-	public async setup(): Promise<void> {
+	public loadMaps() {
+		const scriptPromise = new Promise((resolve, reject) => {
+			const script = document.createElement("script");
+			document.body.appendChild(script);
+			script.onload = resolve;
+			script.onerror = reject;
+			script.async = true;
+			script.src = `https://maps.googleapis.com/maps/api/js?key=${this.MAPS_API_KEY}&libraries=geometry`;
+		});
+		scriptPromise.then(() => {
+			this.setup();
+		});
+	}
+
+	private async setup(): Promise<void> {
 		this.infoWindow = new google.maps.InfoWindow();
 		this.initMap();
 		try {
@@ -99,13 +114,6 @@ export default class MapSetup {
 		};
 		return latLng;
 	}
-
-	// private setLoadScreen(toggle: boolean) {
-	// 	const overlay = document.createElement("div");
-	// 	overlay.className = "load_overlay";
-	// 	const wrapper: Element = document.querySelector("shop-locator-wrapper");
-	// 	wrapper.append(overlay);
-	// }
 
 	// TOOD: Need to find out if all the shop data should be on the marker itself
 	private handleShopDataList(shopDataList: IShopData[]): void {
