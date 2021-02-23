@@ -39,28 +39,7 @@
 		</header>
 
 		<section class="section">
-			<div class="container">
-				<div class="shop-locator-wrapper">
-					<div class="shop-locator-container--left" id="search-header">
-						<section class="shop-locator-search padding--small">
-							<h4 class="search-headline">Søg efter butik</h4>
-
-							<!-- Search field -->
-							<div class="input-field col s6">
-								<input
-									id="autoComplete"
-									placeholder="Søg.."
-									type="text"
-									class="validate"
-								/>
-							</div>
-						</section>
-
-						<section class="shop-locator-list" id="listofstores"></section>
-					</div>
-					<div class="shop-locator-container--right" id="mapDiv"></div>
-				</div>
-			</div>
+			<div class="container" id="shop-locator"></div>
 		</section>
 
 		<footer class="page-footer pink darken-2">
@@ -153,17 +132,18 @@
 		<script src="bundle.js"></script>
 		<!-- TODO: Add as dependency in package.json -->
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+		<!-- TODO: Add as dependency in package.json -->
+		<script src="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@8.2.2/dist/js/autoComplete.js"></script>
 		<script>
 			var shopLocator = new ShopLocator.MapSetup({
 				autocomplete: true,
 				APIEndpoint: prompt(
 					"Please enter your API endpoint URL. Leave the field blank or click CANCEL to continue using some mock-data"
 				),
-				MAPS_API_KEY: "AIzaSyBv8IP6VQfr6EEY8GGWBVnZ6NnucWSmzwA"
+				MAPS_API_KEY: "AIzaSyBv8IP6VQfr6EEY8GGWBVnZ6NnucWSmzwA",
+				selector: "shop-locator",
 			});
 			shopLocator.loadMaps();
 		</script>
-		<!-- TODO: Add as dependency in package.json -->
-		<script src="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@8.2.2/dist/js/autoComplete.js"></script>
 	</body>
 </html>

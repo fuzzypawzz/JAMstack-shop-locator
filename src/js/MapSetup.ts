@@ -3,9 +3,13 @@
 // Helpers
 import http from "./helpers/http";
 
+// Constants
+import ContentConstants from "./constants/Content";
+
 // Template generators
 import { template as listItemTemplate } from "../templates/_list-item";
 import { template as infoWindowTemplate } from "../templates/_info-window";
+import { template as shopLocatorTemplate } from "../templates/wrapper";
 
 // Interfaces
 import { IHttpResponse } from "./helpers/http";
@@ -26,6 +30,7 @@ export default class MapSetup {
 	private map: google.maps.Map;
 	private infoWindow: google.maps.InfoWindow;
 	private wrapperForMapId: string = "mapDiv";
+	private wrapperForShopLocatorId: string;
 	private activateAutocomplete: boolean = false;
 	private APIEndpoint: string;
 	private MAPS_API_KEY: string;
@@ -36,9 +41,11 @@ export default class MapSetup {
 		this.activateAutocomplete = config.autocomplete;
 		this.APIEndpoint = config.APIEndpoint;
 		this.MAPS_API_KEY = config.MAPS_API_KEY;
+		this.wrapperForShopLocatorId = config.selector;
 	}
 
 	public loadMaps() {
+		this.createShopLocatorElement();
 		const scriptPromise = new Promise((resolve, reject) => {
 			const script = document.createElement("script");
 			document.body.appendChild(script);
@@ -75,10 +82,21 @@ export default class MapSetup {
 		}
 	}
 
+	private createShopLocatorElement(): void {
+		const targetId = this.wrapperForShopLocatorId;
+		this.updateDOM(
+			shopLocatorTemplate({
+				headline: ContentConstants.SEARCH_HEADLINE,
+				inputPlaceholder: ContentConstants.SEARCH_FIELD_PLACEHOLDER,
+			}),
+			targetId
+		);
+	}
+
 	/**
 	 * Initiates the map with a custom configuration
 	 */
-	public initMap(): void {
+	private initMap(): void {
 		const centerLatLng: google.maps.LatLngLiteral = this.copenhagen;
 		const wrapperId: string = this.wrapperForMapId;
 

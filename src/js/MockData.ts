@@ -46,7 +46,7 @@ export const responseMock: IShopData[] = [
 		id: "3248222",
 	},
 	{
-		name: "Telia Holmbladsgade",
+		name: "A shop in Holmbladsgade",
 		street: "Holmbladsgade",
 		houseNumber: 139,
 		zipCode: 2300,
@@ -57,7 +57,7 @@ export const responseMock: IShopData[] = [
 		id: "3849232",
 	},
 	{
-		name: "Telia Frederiksberg",
+		name: "Restauranten Frederiksberg",
 		street: "frederiksberggade",
 		houseNumber: 139,
 		zipCode: 2300,
