@@ -14,6 +14,10 @@ import IConfiguration from "./Interfaces/IConfiguration";
 import IShopData from "./Interfaces/IShopData";
 import IExtendedMarker from "./Interfaces/IExtendedMarker";
 
+// Mock data
+import { responseMock } from "./MockData";
+import autoCompleteSetup from "./autocomplete";
+
 export default class MapSetup {
 	private copenhagen: google.maps.LatLngLiteral = {
 		lat: 55.6959315,
@@ -24,96 +28,35 @@ export default class MapSetup {
 	private infoWindow: google.maps.InfoWindow;
 	private wrapperForMapId: string = "mapDiv";
 	private activateAutocomplete: boolean = false;
+	private APIEndpoint: string;
 	public shopDataFromResponse: IHttpResponse<IShopData[]>;
+	public mockData: IShopData[];
 
 	constructor(config: IConfiguration) {
 		this.activateAutocomplete = config.autocomplete;
+		this.APIEndpoint = config.APIEndpoint;
 	}
 
 	public async setup(): Promise<void> {
 		this.infoWindow = new google.maps.InfoWindow();
 		this.initMap();
-		let response: IHttpResponse<IShopData[]>;
-		let responseMock: any;
 		try {
-			// response = await http<IShopData[]>(
-			// 	"https://getstoresfunction20210216205929.azurewebsites.net/api/GetStores"
-			// );
-			responseMock = [
-				{
-					name: "Cphbusiness ved Søerne",
-					street: "Nansensgade",
-					houseNumber: 19,
-					zipCode: 1366,
-					city: "København",
-					phoneNumber: 36154501,
-					lat: "55.68204709239865",
-					lng: "12.562809042571491",
-					id: "34324",
-				},
-				{
-					name: "Cphbusiness Nørrebro",
-					street: "Blågårdsgade",
-					houseNumber: 23,
-					zipCode: 2200,
-					city: "København N",
-					phoneNumber: 36154501,
-					lat: "55.687036666310156",
-					lng: "12.559322146721001",
-					id: "34224",
-				},
-				{
-					name: "Cphbusiness Lyngby",
-					street: "Nørgaardsvej",
-					houseNumber: 30,
-					zipCode: 2800,
-					city: "Kongens Lyngby",
-					phoneNumber: 36154501,
-					lat: "55.770911361721794",
-					lng: "12.511768553967515",
-					id: "732842",
-				},
-				{
-					name: "MinTestButik",
-					street: "demostreet",
-					houseNumber: 99,
-					zipCode: 0,
-					city: "København",
-					phoneNumber: 99999999,
-					lat: "59.22321412",
-					lng: "12.24342324",
-					id: "3248222",
-				},
-				{
-					name: "Telia Holmbladsgade",
-					street: "Holmbladsgade",
-					houseNumber: 139,
-					zipCode: 2300,
-					city: "København S",
-					phoneNumber: 99999999,
-					lat: "59.22321412",
-					lng: "12.24342324",
-					id: "3849232",
-				},
-				{
-					name: "Telia Frederiksberg",
-					street: "frederiksberggade",
-					houseNumber: 139,
-					zipCode: 2300,
-					city: "Frederiksberg",
-					phoneNumber: 99999999,
-					lat: "59.22321412",
-					lng: "12.24342324",
-					id: "2421",
-				},
-			];
-			console.log(response);
-			this.shopDataFromResponse = responseMock;
-			//this.handleShopDataList(response.parsedBody)
-			this.handleShopDataList(responseMock);
-			this.generateShopListItems(responseMock);
-		} catch (response) {
-			console.log("There was an Error: ", response);
+			this.APIEndpoint
+				? (this.shopDataFromResponse = await http<IShopData[]>(
+						this.APIEndpoint
+				  ))
+				: (this.mockData = responseMock);
+
+			const dataToPass: IHttpResponse<IShopData[]> | IShopData[] = this
+				.shopDataFromResponse
+				? this.shopDataFromResponse.parsedBody
+				: this.mockData;
+
+			this.handleShopDataList(dataToPass);
+			this.generateShopListItems(dataToPass);
+			this.activateAutocomplete ? autoCompleteSetup() : null;
+		} catch (errorResponse) {
+			console.log("There was an Error: ", errorResponse);
 		}
 	}
 
@@ -236,7 +179,7 @@ export default class MapSetup {
 
 		const marker: IExtendedMarker = new google.maps.Marker({
 			position: latLng,
-			map: this.map
+			map: this.map,
 		});
 
 		marker.id = `marker_${shopData.id}`;

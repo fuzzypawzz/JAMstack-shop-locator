@@ -1,11 +1,11 @@
 export default interface IShopData {
 	name: string;
 	street: string;
-	houseNumber?: string;
+	houseNumber?: string | number;
 	city: string;
-	zipcode: number;
+	zipCode: number | string;
 	phoneNumber?: number;
 	id?: string;
-	lat: number;
-	lng: number;
+	lat: number | string;
+	lng: number | string;
 }

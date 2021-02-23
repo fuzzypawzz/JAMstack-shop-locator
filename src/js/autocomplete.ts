@@ -1,4 +1,8 @@
-document.addEventListener("DOMContentLoaded", function () {
+// @ts-nocheck
+
+// TODO: Convert to TypeScript and remove ts-nocheck
+
+export default function autoCompleteSetup() {
 	new autoComplete({
 		data: {
 			// Data src [Array, Function, Async] | (REQUIRED)
@@ -7,17 +11,18 @@ document.addEventListener("DOMContentLoaded", function () {
 				const query = document.querySelector("#autoComplete").value;
 
 				if (shopLocator.shopDataFromResponse) {
-					console.log(shopLocator.shopDataFromResponse);
-					return shopLocator.shopDataFromResponse;
+					return shopLocator.shopDataFromResponse.parsedBody;
+				} else if (shopLocator.mockData) {
+					return shopLocator.mockData;
 				} else {
-					// Fetch External Data Source
-					const source = await fetch(
-						`https://getstoresfunction20210216205929.azurewebsites.net/api/GetStores`
-					);
-					// Format data into JSON
-					const data = await source.json();
-					// Return Fetched data
-					return data;
+					// // Fetch External Data Source
+					// const source = await fetch(
+					// 	`https://getstoresfunction20210216205929.azurewebsites.net/api/GetStores`
+					// );
+					// // Format data into JSON
+					// const data = await source.json();
+					// // Return Fetched data
+					return [];
 				}
 			},
 			key: ["name", "street", "zipCode", "city"],
@@ -78,11 +83,8 @@ document.addEventListener("DOMContentLoaded", function () {
 		},
 		noResults: (dataFeedback, generateList) => {},
 		onSelection: (feedback) => {
-			console.log(feedback)
 			// Action script onSelection event | (Optional)
-			document
-				.querySelector(`#marker_${feedback.selection.value.id}`)
-				.click();
+			document.querySelector(`#marker_${feedback.selection.value.id}`).click();
 		},
 	});
-});
+}

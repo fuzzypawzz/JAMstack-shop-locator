@@ -153,7 +153,12 @@
 		<script src="bundle.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 		<script>
-			const shopLocator = new ShopLocator.MapSetup({ autocomplete: true });
+			var shopLocator = new ShopLocator.MapSetup({
+				autocomplete: true,
+				APIEndpoint: prompt(
+					"Please enter your API endpoint URL. Leave the field blank or click CANCEL to continue using some mock-data"
+				),
+			});
 			function callback() {
 				shopLocator.setup();
 			}
