@@ -5,7 +5,7 @@ module.exports = {
 	mode: "development",
 	devtool: "source-map",
 	entry: [
-		"../../node_modules/regenerator-runtime/runtime.js",
+		path.resolve(__dirname, "/node_modules/regenerator-runtime/runtime.js"),
 		path.resolve(__dirname, "./src/index.js"),
 	],
 	output: {
