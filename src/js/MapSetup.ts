@@ -1,7 +1,9 @@
 // DOCS: https://developers.google.com/maps/documentation/javascript/using-typescript
 
-// Helpers
+// Helper functions
 import http from "./helpers/http";
+import convertTemplateToElement from "./helpers/templateToElement";
+import updateDOM from "./helpers/updateDOM";
 
 // Constants
 import ContentConstants from "./constants/Content";
@@ -20,6 +22,9 @@ import IExtendedMarker from "./Interfaces/IExtendedMarker";
 // Mock data
 import { responseMock } from "./MockData";
 import autoCompleteSetup from "./autocomplete";
+
+// Classes
+import { GoogleMapsLoader } from "./Classes/GoogleMapLoader";
 
 export default class MapSetup {
 	private copenhagen: google.maps.LatLngLiteral = {
@@ -45,18 +50,19 @@ export default class MapSetup {
 	}
 
 	public loadMaps() {
-		this.createShopLocatorElement();
-		const scriptPromise = new Promise((resolve, reject) => {
-			const script = document.createElement("script");
-			document.body.appendChild(script);
-			script.onload = resolve;
-			script.onerror = reject;
-			script.async = true;
-			script.src = `https://maps.googleapis.com/maps/api/js?key=${this.MAPS_API_KEY}&libraries=geometry`;
-		});
-		scriptPromise.then(() => {
-			this.setup();
-		});
+		const targetId = this.wrapperForShopLocatorId;
+		updateDOM(
+			shopLocatorTemplate({
+				headline: ContentConstants.SEARCH_HEADLINE,
+				inputPlaceholder: ContentConstants.SEARCH_FIELD_PLACEHOLDER,
+			}),
+			targetId
+		);
+		
+		new GoogleMapsLoader({
+			key: this.MAPS_API_KEY,
+			callback: this.setup.bind(this),
+		}).injectScriptInBody();
 	}
 
 	private async setup(): Promise<void> {
@@ -80,17 +86,6 @@ export default class MapSetup {
 		} catch (errorResponse) {
 			console.log("There was an Error: ", errorResponse);
 		}
-	}
-
-	private createShopLocatorElement(): void {
-		const targetId = this.wrapperForShopLocatorId;
-		this.updateDOM(
-			shopLocatorTemplate({
-				headline: ContentConstants.SEARCH_HEADLINE,
-				inputPlaceholder: ContentConstants.SEARCH_FIELD_PLACEHOLDER,
-			}),
-			targetId
-		);
 	}
 
 	/**
@@ -145,7 +140,7 @@ export default class MapSetup {
 	}
 
 	private generateShopListItems(shopDataList: IShopData[]): void {
-		const ul: Element = this.templateToElement(
+		const ul: Element = convertTemplateToElement(
 			listItemTemplate({
 				entries: shopDataList,
 			})
@@ -168,33 +163,7 @@ export default class MapSetup {
 			);
 		});
 
-		this.updateDOM(ul, "listofstores");
-	}
-
-	private templateToElement(
-		htmlTemplate: string,
-		parentElementTag?: string
-	): Element {
-		const parentElement: Element = document.createElement(
-			parentElementTag ? parentElementTag : "div"
-		);
-		parentElement.innerHTML = htmlTemplate;
-		return parentElement;
-	}
-
-	private updateDOM(html: string | Element, targetId: string): void {
-		const target: any = document.querySelector(`#${targetId}`);
-		const element: Element =
-			typeof html == "string" ? this.templateToElement(html) : html;
-
-		try {
-			target.appendChild(element);
-		} catch (error) {
-			console.warn(
-				`Something went wrong when trying to update the DOM. Is target-id: "${targetId}" correct?`
-			);
-			throw new Error(error);
-		}
+		updateDOM(ul, "listofstores");
 	}
 
 	private contructMarker(
