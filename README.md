@@ -1,5 +1,5 @@
 # JAMstack-shop-locator
-The Shop Locator is static web application made with the JAMStack architecture in mind. The project is made as part of my exam project is Cloud Technologies at CPH Business in Copenhagen.
+The Shop Locator is static web application made with the JAMStack architecture in mind. The project is made as part of my exam project in Cloud Technologies at CPH Business in Copenhagen.
 ## How to setup
 - Clone repository
 - Run NPM Install
