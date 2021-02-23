@@ -3,7 +3,7 @@ The Shop Locator is static web application made with the JAMStack architecture i
 ## Project setup
 - Clone repository
 - Run NPM Install
-- npm run dev & pin up your dev server
+- npm run dev & spin up your local dev server
 - Go to /dist/index.html
 
 ### Configuration
