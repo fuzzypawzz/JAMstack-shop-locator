@@ -247,10 +247,11 @@ export default class MapSetup {
 
 		const marker: IExtendedMarker = new google.maps.Marker({
 			position: latLng,
-			map: this.map,
-			id: `marker_${shopData.id}`,
-			markup: infoWindowTemplate(shopData),
+			map: this.map
 		});
+
+		marker.id = `marker_${shopData.id}`;
+		marker.markup = infoWindowTemplate(shopData);
 
 		function addClickHandler(marker: IExtendedMarker) {
 			function listItemHandler() {
