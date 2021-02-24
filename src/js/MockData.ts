@@ -10,7 +10,7 @@ export const responseMock: IShopData[] = [
 		phoneNumber: 36154501,
 		lat: "55.68204709239865",
 		lng: "12.562809042571491",
-		id: "34324",
+		id: "10",
 	},
 	{
 		name: "Cphbusiness Nørrebro",
@@ -21,7 +21,7 @@ export const responseMock: IShopData[] = [
 		phoneNumber: 36154501,
 		lat: "55.687036666310156",
 		lng: "12.559322146721001",
-		id: "34224",
+		id: "11",
 	},
 	{
 		name: "Cphbusiness Lyngby",
@@ -32,7 +32,7 @@ export const responseMock: IShopData[] = [
 		phoneNumber: 36154501,
 		lat: "55.770911361721794",
 		lng: "12.511768553967515",
-		id: "732842",
+		id: "12",
 	},
 	{
 		name: "MinTestButik",
@@ -43,7 +43,7 @@ export const responseMock: IShopData[] = [
 		phoneNumber: 99999999,
 		lat: "59.22321412",
 		lng: "12.24342324",
-		id: "3248222",
+		id: "13",
 	},
 	{
 		name: "A shop in Holmbladsgade",
@@ -54,7 +54,7 @@ export const responseMock: IShopData[] = [
 		phoneNumber: 99999999,
 		lat: "59.22321412",
 		lng: "12.24342324",
-		id: "3849232",
+		id: "14",
 	},
 	{
 		name: "Restauranten Frederiksberg",
@@ -65,6 +65,6 @@ export const responseMock: IShopData[] = [
 		phoneNumber: 99999999,
 		lat: "59.22321412",
 		lng: "12.24342324",
-		id: "2421",
+		id: "15",
 	},
 ];
