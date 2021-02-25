@@ -10,18 +10,17 @@ The Shop Locator is static web application made with the JAMStack architecture i
 - Load the bundle.js script.
 - Create a new ShopLocator instance and call loadMaps() on it:
 ```
-const configuration =
-{
-	autocomplete: true,
-	APIEndpoint: "[YOUR_API_ENDPOINT]"
-	MAPS_API_KEY: "[YOUR_GOOGLE_MAPS_API_KEY]"
-};
-
-const shopLocator = new ShopLocator.MapSetup(configuration);
+const shopLocator = new ShopLocator.MapSetup(
+	{
+		autocomplete: true,
+		APIEndpoint: "[YOUR_API_ENDPOINT]"
+		MAPS_API_KEY: "[YOUR_GOOGLE_MAPS_API_KEY]"
+	}
+);
 shopLocator.loadMaps();
 ```
 
-### API Endpoint to get store data
-- As of today, you will be prompted in the browser for a URL to fetch store-data from.
-- You can simply click "cancel" or leave the field empty to launch the Shop Locator with predefined test-data.
-- The mock JSON is located here: /src/js/mockData.ts
+### Loading store data from your an API
+- Provide your own store data, by typing your API endpoint URL in the configuration object.
+- For testing purposes, the app will load with mock JSON data if no URL is provided.
+- The mock JSON is located here: /src/js/mockData.ts - refer to the mock data as being the 'data contract'.
