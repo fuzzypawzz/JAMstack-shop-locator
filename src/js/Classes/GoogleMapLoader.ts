@@ -1,15 +1,16 @@
 interface IMapsAPI {
 	key: string;
-  callback: Function;
+	callback: Function;
 }
 
 export class GoogleMapsLoader {
 	private MAPS_API_KEY: string;
-  private callback: Function;
+	private callback: Function;
+	public map: google.maps.Map;
 
 	constructor(parameters: IMapsAPI) {
 		this.MAPS_API_KEY = parameters.key;
-    this.callback = parameters.callback;
+		this.callback = parameters.callback;
 	}
 
 	public injectScriptInBody() {
@@ -24,5 +25,28 @@ export class GoogleMapsLoader {
 		scriptPromise.then(() => {
 			this.callback();
 		});
+	}
+
+	public initMap(center: google.maps.LatLngLiteral, wrapperId: string): void {
+		this.map = new google.maps.Map(
+			document.getElementById(wrapperId) as HTMLElement,
+			{
+				center: center,
+				zoom: 11,
+				disableDefaultUI: true,
+				zoomControl: true,
+				clickableIcons: false,
+				styles: [
+					{
+						featureType: "poi.business",
+						stylers: [{ visibility: "off" }],
+					},
+					{
+						featureType: "transit",
+						stylers: [{ visibility: "on" }],
+					},
+				],
+			}
+		);
 	}
 }

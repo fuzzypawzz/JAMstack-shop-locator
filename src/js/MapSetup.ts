@@ -5,6 +5,9 @@ import http from "./helpers/http";
 import convertTemplateToElement from "./helpers/templateToElement";
 import updateDOM from "./helpers/updateDOM";
 
+// Extensions
+import autoCompleteSetup from "./autocomplete";
+
 // Constants
 import ContentConstants from "./constants/Content";
 
@@ -21,10 +24,10 @@ import IExtendedMarker from "./Interfaces/IExtendedMarker";
 
 // Mock data
 import { responseMock } from "./MockData";
-import autoCompleteSetup from "./autocomplete";
 
 // Classes
 import { GoogleMapsLoader } from "./Classes/GoogleMapLoader";
+import { LatLngObject } from "./Classes/LatLngObject";
 
 export default class MapSetup {
 	private copenhagen: google.maps.LatLngLiteral = {
@@ -32,7 +35,7 @@ export default class MapSetup {
 		lng: 12.4609883,
 	};
 	private markerStorage: Array<google.maps.Marker> = [];
-	private map: google.maps.Map;
+	private mapLoader: GoogleMapsLoader;
 	private infoWindow: google.maps.InfoWindow;
 	private wrapperForMapId: string = "mapDiv";
 	private wrapperForShopLocatorId: string;
@@ -49,6 +52,11 @@ export default class MapSetup {
 		this.wrapperForShopLocatorId = config.selector;
 	}
 
+	/**
+	 * Entry point "loadMaps()" should be called first.
+	 * It will generate the HTML for the app and inject that +
+	 * a script onto the document body, to load the google maps instance.
+	 */
 	public loadMaps() {
 		const targetId = this.wrapperForShopLocatorId;
 		updateDOM(
@@ -58,16 +66,25 @@ export default class MapSetup {
 			}),
 			targetId
 		);
-		
-		new GoogleMapsLoader({
+
+		this.mapLoader = new GoogleMapsLoader({
 			key: this.MAPS_API_KEY,
 			callback: this.setup.bind(this),
-		}).injectScriptInBody();
+		});
+
+		this.mapLoader.injectScriptInBody();
 	}
 
+	/**
+	 * Sets up the main elements in the app, like the google maps map instance
+	 * and then it moves on to call methods for loading the API data
+	 */
 	private async setup(): Promise<void> {
+		// Instanciate only 1 infoWindow - and that windows state can then change over time.
+		// It's important that we don't create new infoWindows every time we click a marker.
 		this.infoWindow = new google.maps.InfoWindow();
-		this.initMap();
+
+		this.mapLoader.initMap(this.copenhagen, this.wrapperForMapId);
 		try {
 			this.APIEndpoint
 				? (this.shopDataFromResponse = await http<IShopData[]>(
@@ -88,81 +105,40 @@ export default class MapSetup {
 		}
 	}
 
-	/**
-	 * Initiates the map with a custom configuration
-	 */
-	private initMap(): void {
-		const centerLatLng: google.maps.LatLngLiteral = this.copenhagen;
-		const wrapperId: string = this.wrapperForMapId;
-
-		this.map = new google.maps.Map(
-			document.getElementById(wrapperId) as HTMLElement,
-			{
-				center: centerLatLng,
-				zoom: 11,
-				disableDefaultUI: true,
-				zoomControl: true,
-				clickableIcons: false,
-				styles: [
-					{
-						featureType: "poi.business",
-						stylers: [{ visibility: "off" }],
-					},
-					{
-						featureType: "transit",
-						stylers: [{ visibility: "on" }],
-					},
-				],
-			}
-		);
-	}
-
-	private contructLatLngObject(
-		lat: string | number,
-		lng: string | number
-	): { lat: number; lng: number } {
-		const latLng: google.maps.LatLngLiteral = {
-			lat: parseFloat(lat as string),
-			lng: parseFloat(lng as string),
-		};
-		return latLng;
-	}
-
 	// TOOD: Need to find out if all the shop data should be on the marker itself
 	private handleShopDataList(shopDataList: IShopData[]): void {
 		shopDataList.forEach((shop: IShopData) => {
-			const latLngObject: google.maps.LatLngLiteral = this.contructLatLngObject(
-				shop.lat,
-				shop.lng
-			);
-			this.contructMarker(latLngObject, shop);
+			const latLngObject = new LatLngObject({
+				lat: shop.lat,
+				lng: shop.lng,
+			}).getObject();
+			
+			// It's important to save the marker, since our list-item..
+			// ..event listeners is referencing those stores markers
+			this.saveMarker(this.contructMarker(latLngObject, shop));
 		});
 	}
 
 	private generateShopListItems(shopDataList: IShopData[]): void {
-		const ul: Element = convertTemplateToElement(
-			listItemTemplate({
-				entries: shopDataList,
-			})
-		);
-		const listItems = ul.querySelectorAll("input");
+		const template: string = listItemTemplate({ entries: shopDataList });
+		const ul: Element = convertTemplateToElement(template);
+		const inputFieldsInList = ul.querySelectorAll("input");
 
 		function triggerMarkerClick(): void {
 			google.maps.event.trigger(this, "click");
 		}
 
 		// TODO: The event bubbling should be disabled, so only 1 event fires on click
-		listItems.forEach((item) => {
-			item.addEventListener(
+		inputFieldsInList.forEach((input) => {
+			input.addEventListener(
 				"click",
 				triggerMarkerClick.bind(
 					this.markerStorage.find(
-						(marker: IExtendedMarker) => marker.id == item.id
+						(marker: IExtendedMarker) => marker.id == input.id
 					)
 				)
 			);
 		});
-
 		updateDOM(ul, "listofstores");
 	}
 
@@ -174,22 +150,17 @@ export default class MapSetup {
 
 		const marker: IExtendedMarker = new google.maps.Marker({
 			position: latLng,
-			map: this.map,
+			map: this.mapLoader.map,
 		});
-
 		marker.id = `marker_${shopData.id}`;
 		marker.markup = infoWindowTemplate(shopData);
 
 		function addClickHandler(marker: IExtendedMarker) {
-			function listItemHandler() {
-				this.element.checked = true;
-			}
-
 			marker.addListener("click", function () {
-				if (!this.listElementRadioBinding) {
-					this.listElementRadioBinding = document.querySelector(`#${this.id}`);
+				if (!this.correspondingListItem) {
+					this.correspondingListItem = document.querySelector(`#${this.id}`);
 				}
-				this.listElementRadioBinding.checked = true;
+				this.correspondingListItem.checked = true;
 				infoWindow.setContent(this.markup);
 				infoWindow.setPosition(latLng);
 				infoWindow.setOptions({
@@ -203,7 +174,6 @@ export default class MapSetup {
 		}
 
 		addClickHandler(marker);
-		this.saveMarker(marker);
 		return marker;
 	}
 
