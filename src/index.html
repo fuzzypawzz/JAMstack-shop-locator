@@ -8,10 +8,6 @@
 			rel="stylesheet"
 			href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
 		/>
-		<link
-			href="https://fonts.googleapis.com/icon?family=Material+Icons"
-			rel="stylesheet"
-		/>
 		<title>Shop Locator JAMStack application</title>
 	</head>
 
@@ -130,16 +126,10 @@
 		</footer>
 
 		<script src="bundle.js"></script>
-		<!-- TODO: Add as dependency in package.json -->
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-		<!-- TODO: Add as dependency in package.json -->
-		<script src="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@8.2.2/dist/js/autoComplete.js"></script>
 		<script>
 			var shopLocator = new ShopLocator.MapSetup({
 				autocomplete: true,
-				APIEndpoint: prompt(
-					"Please enter your API endpoint URL. Leave the field blank or click CANCEL to continue using some mock-data"
-				),
+				APIEndpoint: "",
 				MAPS_API_KEY: "AIzaSyBv8IP6VQfr6EEY8GGWBVnZ6NnucWSmzwA",
 				selector: "shop-locator",
 			});

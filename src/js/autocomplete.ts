@@ -1,5 +1,7 @@
 // @ts-nocheck
 
+const autoComplete = require("autoComplete");
+
 // TODO: Convert to TypeScript and remove ts-nocheck
 
 export default function autoCompleteSetup() {

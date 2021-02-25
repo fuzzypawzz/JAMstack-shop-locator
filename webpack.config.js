@@ -47,6 +47,7 @@ module.exports = {
 	resolve: {
 		alias: {
 			handlebars: "../../node_modules/handlebars/dist/handlebars.js",
+			autoComplete: "../../node_modules/@tarekraafat/autocomplete.js",
 		},
 		extensions: ["*", ".js", ".tsx", ".ts"],
 		modules: [path.resolve(__dirname, "src")],
