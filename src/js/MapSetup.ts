@@ -150,41 +150,6 @@ export default class MapSetup {
 		updateDOM(ul, "listofstores");
 	}
 
-	// private contructMarker(
-	// 	latLng: google.maps.LatLngLiteral,
-	// 	shopData: IShopData
-	// ): google.maps.Marker {
-	// 	const infoWindow = this.infoWindow;
-
-	// 	const marker: IExtendedMarker = new google.maps.Marker({
-	// 		position: latLng,
-	// 		map: this.mapLoader.map,
-	// 	});
-	// 	marker.id = `marker_${shopData.id}`;
-	// 	marker.markup = infoWindowTemplate(shopData);
-
-	// 	function addClickHandler(marker: IExtendedMarker) {
-	// 		marker.addListener("click", function () {
-	// 			if (!this.correspondingListItem) {
-	// 				this.correspondingListItem = document.querySelector(`#${this.id}`);
-	// 			}
-	// 			this.correspondingListItem.checked = true;
-	// 			infoWindow.setContent(this.markup);
-	// 			infoWindow.setPosition(latLng);
-	// 			infoWindow.setOptions({
-	// 				// Display infowindow correctly relatively to the marker position
-	// 				pixelOffset: new google.maps.Size(0, -35),
-	// 			});
-	// 			this.map.setZoom(15);
-	// 			infoWindow.open(this.map);
-	// 			this.map.setCenter(latLng);
-	// 		});
-	// 	}
-
-	// 	addClickHandler(marker);
-	// 	return marker;
-	// }
-
 	private saveMarker(marker: google.maps.Marker) {
 		this.markerStorage.push(marker);
 	}
