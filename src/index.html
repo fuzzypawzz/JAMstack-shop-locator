@@ -130,7 +130,9 @@
 			var shopLocator = new ShopLocator.MapSetup({
 				autocomplete: true,
 				APIEndpoint: "",
-				MAPS_API_KEY: "AIzaSyBv8IP6VQfr6EEY8GGWBVnZ6NnucWSmzwA",
+				MAPS_API_KEY: prompt(
+					"Provide your Google Maps API key"
+				),
 				selector: "shop-locator",
 			});
 			shopLocator.loadMaps();
