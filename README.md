@@ -20,7 +20,7 @@ const shopLocator = new ShopLocator.MapSetup(
 shopLocator.loadMaps();
 ```
 
-### Loading store data from your an API
-- Provide your own store data, by typing your API endpoint URL in the configuration object.
+### Loading store data
+- Type the API URL (GET) in the configuration object prop: "APIEndpoint"
 - For testing purposes, the app will load with mock JSON data if no URL is provided.
 - The mock JSON is located here: /src/js/mockData.ts - refer to the mock data as being the 'data contract'.
